@@ -1,68 +1,48 @@
 ﻿using System.Data.SqlClient;
 
-string stringaDiConnessione = "Data Source=localhost; Initial Catalog = biblioteca-db; Integrated Security = True";
+string stringaDiConnessione = "Data Source=localhost;Initial Catalog=biblioteca-db;Integrated Security=True";
 
 SqlConnection connessioneSql = new SqlConnection(stringaDiConnessione);
+
 
 try
 {
     connessioneSql.Open();
-    Documento myDocumento = new Documento("Papere", "2008/12/12", "politica", true, 23, "Sandro", "155935", 120, 0, "libro");
 
-    //INSERT
-    //string insertQuery = "INSERT INTO documenti (titolo, anno, codice, settore, scaffale, stato, autore, tipo, pagine, durata)" +
-    //    "VALUES (@titolo, @anno, @codice, @settore, @scaffale, @stato, @autore, @tipo, @pagine, @durata)";
+    //Ricerca documento
+    Console.WriteLine("Scrivi il titolo del documento da cercare: ");
+    string userInputDocumento = Console.ReadLine();
 
-    //SqlCommand insertCommand = new SqlCommand(insertQuery, connessioneSql);
+    int documento_id = Crud.ricercaDocumento(userInputDocumento, connessioneSql);
 
-    //insertCommand.Parameters.Add(new SqlParameter("@titolo", myDocumento.Titolo));
-    //insertCommand.Parameters.Add(new SqlParameter("@anno", myDocumento.Anno));
-    //insertCommand.Parameters.Add(new SqlParameter("@codice", myDocumento.Codice));
-    //insertCommand.Parameters.Add(new SqlParameter("@settore", myDocumento.Settore));
-    //insertCommand.Parameters.Add(new SqlParameter("@scaffale", myDocumento.Scaffale));
-    //insertCommand.Parameters.Add(new SqlParameter("@stato", myDocumento.Stato));
-    //insertCommand.Parameters.Add(new SqlParameter("@autore", myDocumento.Autore));
-    //insertCommand.Parameters.Add(new SqlParameter("@tipo", myDocumento.Tipo));
-    //insertCommand.Parameters.Add(new SqlParameter("@pagine", myDocumento.Pagine));
-    //insertCommand.Parameters.Add(new SqlParameter("@durata", myDocumento.Durata));
+    //Prenotazione documento
+    Console.WriteLine("Vuoi prenotare il documento? [si/no]");
+    string userInput = Console.ReadLine();
 
-    //int insertedRows = insertCommand.ExecuteNonQuery();
+    if (userInput == "si")
+    {
+        Console.WriteLine("Inserire nome utente");
+        string userNome = Console.ReadLine();
+        Console.WriteLine("Inserire data inizio prestito");
+        string dataInizio = Console.ReadLine();
+        Console.WriteLine("Inserire data fine prestito");
+        string dataFine = Console.ReadLine();
+        Crud.creaPrestito(userNome, dataInizio, dataFine, documento_id, connessioneSql);
+    }
 
-    //UPDATE
-    //string upQuery = "UPDATE documenti SET titolo=@titolo WHERE id=@id";
-    //SqlCommand upCmd = new SqlCommand(upQuery, connessioneSql);
-    //upCmd.Parameters.Add(new SqlParameter("@titolo", "Sandro"));
-    //upCmd.Parameters.Add(new SqlParameter("@id", "1"));
-
-    //int affectedRows = upCmd.ExecuteNonQuery();
-
-    //DELETE
-    //string deleteQuery = "DELETE FROM documenti WHERE id=@id";
-
-    //SqlCommand delCmd = new SqlCommand(deleteQuery, connessioneSql);
-    //delCmd.Parameters.Add(new SqlParameter("@id", 3));
-    //int affectedRows = delCmd.ExecuteNonQuery();
+    //Ricerca prestito
+    Console.WriteLine("Inserire nome utente del prestito da cercare");
+    string userNomePrestito = Console.ReadLine();
+    Crud.ricercaPrestito(userNomePrestito, connessioneSql);
 
 }
 catch (Exception e)
 {
     Console.WriteLine(e.Message);
-
 }
 finally
 {
     connessioneSql.Close();
 }
 
-
-
-
-
-
-
-//Biblioteca myBiblioteca = new Biblioteca();
-//myBiblioteca.StampaUtenti();
-//myBiblioteca.StampaLibri();
-//myBiblioteca.StampaDVDs();
-//myBiblioteca.RicercaDocumento();
-//myBiblioteca.RicercaPrestiti();
+return;
